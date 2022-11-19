@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:date_format/date_format.dart';
 import 'package:http/http.dart' as http;
-import 'package:onedeal_app/model/new_reservation.dart';
 import '../model/new_rental.dart';
 import '../model/rental.dart';
 import '../model/reservation_filter.dart';
@@ -41,7 +39,6 @@ class RentalService {
   }
 
   static List<Rental> fromJson(String returnJson) {
-    print(returnJson);
     Map<String, dynamic> map = json.decode(returnJson);
     var rentals = <Rental>[];
 

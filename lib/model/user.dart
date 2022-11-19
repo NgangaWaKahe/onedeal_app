@@ -11,6 +11,8 @@ class User {
   String password = '';
   String userType = '';
   String token = '';
+  String phonenumber = '';
+  String createDate = "";
 
   String toString() {
     return "id:$id name:$firstName email:$email userType:$userType";

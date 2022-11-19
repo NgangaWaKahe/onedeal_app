@@ -1,11 +1,20 @@
-class ErrorRespond {
-  String status = "";
+class UploadRespond {
+  List<String> status = [];
 
-  ErrorRespond(this.status);
+  UploadRespond(this.status);
 
-  static ErrorRespond parseRespond(dynamic map) {
-    return ErrorRespond(
-      map["status"],
+  UploadRespond.empty() {
+    status = [];
+  }
+
+  static UploadRespond parseRespond(dynamic map) {
+    List<String> uploadFiles = [];
+    for (var w in map["filename"]) {
+      uploadFiles.add(w);
+    }
+
+    return UploadRespond(
+      uploadFiles,
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:onedeal_app/model/reservation.dart';
+import 'package:onedeal_app/pages/loading_screen.dart';
 import 'package:onedeal_app/pages/reservation/reservation_thumbnail.dart';
 
 import '../../data/local_data.dart';
@@ -27,7 +28,7 @@ class ReservationPageState extends State<ReservationPage> {
 
   String feedbackMsg = "";
 
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   final ReservationService service = ReservationService();
   final DBHelper dbHelper = DBHelper();
   User? user;
@@ -125,18 +126,7 @@ class ReservationPageState extends State<ReservationPage> {
     widgets.add(createReservationView(context));
 
     if (isLoading) {
-      var modal = Stack(
-        children: const <Widget>[
-          Opacity(
-            opacity: 0.3,
-            child: ModalBarrier(dismissible: false, color: Colors.grey),
-          ),
-          Center(
-            child: CircularProgressIndicator(),
-          ),
-        ],
-      );
-      widgets.add(modal);
+      widgets.add(const LoadingScreen());
     }
     if (errorMsg != "") {
       var modal = Stack(

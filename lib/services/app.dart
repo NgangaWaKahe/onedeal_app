@@ -7,6 +7,8 @@ class AppService {
       'https://onedeal.runbit.co.uk/api/v1/tkn/login';
   static const ServiceUrl = 'onedeal.runbit.co.uk';
   static const ServiceImageURL = 'https://onedeal.runbit.co.uk/api/v1/images';
+  static const serviceDocumentURL =
+      'https://onedeal.runbit.co.uk/api/v1/document';
 
   static const Header = {'Content-Type': 'application/json'};
   static DateFormat formatFilter = DateFormat('yyyy-MM-dd');
@@ -25,5 +27,11 @@ class AppService {
 
   static String formatDate(DateTime datetime) {
     return formatFilter.format(datetime);
+  }
+
+  static Future<Map<String, String>> getImageHttpHeader() async {
+    var _headers = {'Content-Type': 'application/json'};
+    _headers["Authorization"] = await AppService.getUserToken();
+    return _headers;
   }
 }

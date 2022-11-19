@@ -52,6 +52,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _MainState();
@@ -65,7 +67,7 @@ class _MainState extends State<MainPage> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    controller = new TabController(initialIndex: 0, length: 4, vsync: this);
+    controller = TabController(initialIndex: 0, length: 4, vsync: this);
     super.initState();
   }
 
@@ -80,9 +82,9 @@ class _MainState extends State<MainPage> with SingleTickerProviderStateMixin {
     return Scaffold(
         body: TabBarView(
           // Add tabs as widgets
-          children: getPages(),
-          // set the controller
           controller: controller,
+          // Add tabs as widgets
+          children: getPages(),
         ), // new
         bottomNavigationBar: BottomAppBar(
           shape: const CircularNotchedRectangle(),

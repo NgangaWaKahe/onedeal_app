@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:onedeal_app/model/user.dart';
 
+import '../model/error_respond.dart';
+import '../model/results.dart';
 import 'app.dart';
 
 class LoginService {
@@ -24,6 +26,24 @@ class LoginService {
     }
   }
 
+  Future<ResponseResult<String>> findDocument() async {
+    try {
+      var _headers = {'Content-Type': 'application/json'};
+      _headers["Authorization"] = await AppService.getUserToken();
+      final uri = Uri.https(AppService.ServiceUrl, "api/v1/documents-name");
+      final response = await http.get(uri, headers: _headers);
+      print(response.statusCode);
+      if (response.statusCode != 200) {
+        return ResponseResult([], response.statusCode);
+      }
+      return ResponseResult(
+          parseDocumentList(response.body), response.statusCode);
+    } catch (e) {
+      print(e);
+      return ResponseResult([], -1);
+    }
+  }
+
   Future<User?> register(User user) async {
     try {
       String json = _toJson(user);
@@ -40,27 +60,6 @@ class LoginService {
       return null;
     }
   }
-
-  // Future<ResponseResult<User>> fetchUses(int limit, int offset) async {
-  //   try {
-  //     _headers["Authorization"] = await AppService.getUserToken();
-  //
-  //     var queryParam = {"limit": limit.toString(), "offset": offset.toString()};
-  //
-  //     final uri = new Uri.https(AppService.ServiceUrl, "api/v1/company/admin/list", queryParam);
-  //     print(uri.toString());
-  //
-  //     final response = await http.get(uri, headers: _headers);
-  //     if (response.statusCode != 200) {
-  //       return new ResponseResult(<User>[], response.statusCode);
-  //     }
-  //
-  //     return new ResponseResult(fromJson(response.body), response.statusCode);
-  //   } catch (e) {
-  //     print(e);
-  //     return new ResponseResult(<User>[], 500);
-  //   }
-  // }
 
   // Future<bool> updateUserActiveStatus(String username, bool active, int companyID) async {
   //   try {
@@ -82,6 +81,17 @@ class LoginService {
   //     return false;
   //   }
   // }
+
+  List<String> parseDocumentList(String returnJson) {
+    List<dynamic> map = json.decode(returnJson);
+    var paths = <String>[];
+    for (var a in map) {
+      var host = AppService.serviceDocumentURL;
+      paths.add("$host?name=$a");
+    }
+
+    return paths;
+  }
 
   List<User> fromJson(String returnJson) {
     Map<String, dynamic> map = json.decode(returnJson);
@@ -113,7 +123,7 @@ class LoginService {
 
   User _fromJson(String jsonString) {
     Map<String, dynamic> map = json.decode(jsonString);
-    var user = new User();
+    var user = User();
     user.id = map['id'];
     user.firstName = map['first_name'];
     user.secondName = map['second_name'];
@@ -124,8 +134,8 @@ class LoginService {
     user.dob = map['dob'];
     user.active = map['active'];
     user.userType = map['users_type'];
-    // user.phonenumber = map['phonenumber'];
-
+    user.phonenumber = map['phonenumber'];
+    user.createDate = map['create_date'];
     // if (map['is_admin']) {
     //   user.isAdmin = 1;
     // }
@@ -139,70 +149,6 @@ class LoginService {
     String jsonString = json.encode(mapData);
     return jsonString;
   }
-
-  // Future<bool> createNewUser(User user, Company company) async {
-  //   try {
-  //     final String json = _toRegistrationJson(user, company);
-  //     _headers["Authorization"] = await AppService.getUserToken();
-  //
-  //     final uri = new Uri.https(AppService.ServiceUrl, "/api/v2/registration/new");
-  //     final response =
-  //     await http.post(uri, headers: _headers, body: json);
-  //     if (response.statusCode != 200) {
-  //       return false;
-  //     }
-  //     return true;
-  //   } catch (e) {
-  //     print(e);
-  //     return false;
-  //   }
-  // }
-
-  // String _toRegistrationJson(User user, Company company) {
-  //   var mapData = new Map();
-  //   mapData["name"] = company.name;
-  //   mapData["address"] = company.address;
-  //   mapData["sector"] = company.sector;
-  //   mapData["kra_id"] = company.registration;
-  //
-  //   var userData = new Map();
-  //   userData["firstname"] = user.firstName;
-  //   userData["email"] = user.email;
-  //   userData["city"] = "";
-  //   userData["dob"] = user.dob;
-  //   userData["idnumber"] = "";
-  //   userData["password"] = user.password;
-  //   userData["phonenumber"] = "";
-  //
-  //   var data = new Map();
-  //   data["company"] = mapData;
-  //   data["user"] = userData;
-  //
-  //   String jsonString = json.encode(data);
-  //   print(jsonString);
-  //   return jsonString;
-  // }
-
-  // Future<bool> updatePassword(String oldPassword, String newPassword) async {
-  //   try {
-  //     var data = new Map();
-  //     data["old_password"] = oldPassword;
-  //     data["new_password"] = newPassword;
-  //     final String body = json.encode(data);
-  //
-  //     _headers["Authorization"] = await AppService.getUserToken();
-  //
-  //     final uri = new Uri.https(AppService.ServiceUrl, "api/v2/update-password");
-  //     print(uri);
-  //     final response =
-  //     await http.post(uri, headers: _headers, body: body);
-  //     print(response.statusCode);
-  //     return response.statusCode == 200;
-  //   } catch (e) {
-  //     print(e);
-  //     return false;
-  //   }
-  // }
 
   Future<bool> inviteUser(User user) async {
     try {
@@ -226,5 +172,38 @@ class LoginService {
       print(e);
       return false;
     }
+  }
+
+  Future<ResponseSingleResult<UploadRespond>> uploadPhotos(
+      List<String> paths) async {
+    try {
+      Map<String, String> headers = {};
+      headers["Authorization"] = await AppService.getUserToken();
+      final uri = Uri.https(AppService.ServiceUrl, "api/v1/document");
+      http.MultipartRequest request = http.MultipartRequest('POST', uri);
+      request.headers['Authorization'] = await AppService.getUserToken();
+      for (String path in paths) {
+        request.files.add(await http.MultipartFile.fromPath('files', path));
+      }
+
+      http.StreamedResponse response = await request.send();
+      final respStr = await response.stream.bytesToString();
+
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        return ResponseSingleResult<UploadRespond>(
+            parseErrorRespond(respStr), response.statusCode);
+      }
+      return ResponseSingleResult<UploadRespond>(
+          UploadRespond.empty(), response.statusCode);
+    } catch (e) {
+      print(e);
+      return ResponseSingleResult<UploadRespond>(UploadRespond.empty(), -1);
+    }
+  }
+
+  UploadRespond parseErrorRespond(dynamic x) {
+    var map = json.decode(x);
+    return UploadRespond.parseRespond(map);
   }
 }

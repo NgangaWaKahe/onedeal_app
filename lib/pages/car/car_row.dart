@@ -58,31 +58,8 @@ class CarThumbnail extends StatelessWidget {
                 left: 10.0,
                 child: Row(
                   children: <Widget>[
-                    Container(
-                      height: 40.0,
-                      width: 60.0,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          color: Colors.black.withOpacity(0.2)),
-                      child: Center(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          const Icon(Icons.star,
-                              color: Colors.white, size: 12.0),
-                        ],
-                      )),
-                    ),
                     const SizedBox(width: 50.0),
-                    const Text(
-                      'More',
-                      style: TextStyle(
-                          color: Colors.white, fontFamily: 'Opensans'),
-                    ),
                     const SizedBox(width: 7.0),
-                    //this should be an iconbutton in a real app.
-                    const Icon(Icons.arrow_drop_down,
-                        color: Colors.white, size: 25.0)
                   ],
                 ),
               ),

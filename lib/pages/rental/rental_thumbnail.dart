@@ -1,12 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:onedeal_app/model/car.dart';
 import 'package:onedeal_app/model/rental.dart';
-import 'package:onedeal_app/pages/reservation/reservation_detail.dart';
+import 'package:onedeal_app/pages/rental/rental_detail.dart';
 import 'package:onedeal_app/util/formatter.dart';
-
-import '../../model/reservation.dart';
 
 class RentalThumbnail extends StatelessWidget {
   final Rental rental;
@@ -23,7 +20,10 @@ class RentalThumbnail extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.all(10.0),
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => RentalDetailPage(rental)));
+          },
           child: Stack(
             children: <Widget>[
               Container(

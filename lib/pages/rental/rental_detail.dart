@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:onedeal_app/model/new_rental.dart';
-import 'package:onedeal_app/pages/loading_screen.dart';
 
 import '../../data/local_data.dart';
 import '../../model/car.dart';
+import '../../model/rental.dart';
 import '../../model/reservation.dart';
 import '../../model/results.dart';
 import '../../services/car.dart';
@@ -13,21 +13,21 @@ import '../../services/rental.dart';
 import '../../util/formatter.dart';
 import '../../util/widget_generator.dart';
 import '../action_screen.dart';
+import '../loading_screen.dart';
 import '../search/car_preview_row.dart';
 
-class ReservationDetailPage extends StatefulWidget {
-  final Reservation reservation;
+class RentalDetailPage extends StatefulWidget {
+  final Rental rental;
 
-  const ReservationDetailPage(this.reservation, {super.key});
+  const RentalDetailPage(this.rental, {super.key});
 
   @override
-  ReservationDetailPageState createState() =>
-      ReservationDetailPageState(reservation);
+  RentalDetailPageState createState() => RentalDetailPageState(rental);
 }
 
-class ReservationDetailPageState extends State<ReservationDetailPage>
+class RentalDetailPageState extends State<RentalDetailPage>
     with SingleTickerProviderStateMixin {
-  final Reservation reservation;
+  final Rental rental;
   final DBHelper dbHelper = DBHelper();
   final CarService service = CarService();
   final RentalService rservice = RentalService();
@@ -43,7 +43,7 @@ class ReservationDetailPageState extends State<ReservationDetailPage>
 
   Color feedbackColor = Colors.black;
 
-  ReservationDetailPageState(this.reservation);
+  RentalDetailPageState(this.rental);
 
   @override
   void initState() {
@@ -72,7 +72,7 @@ class ReservationDetailPageState extends State<ReservationDetailPage>
       }
 
       List<ResponseSingleResult<Car>> responses =
-          await Future.wait([service.getCar(reservation.carID)]);
+          await Future.wait([service.getCar(rental.carID)]);
 
       if (responses[0].respondCode == 401) {
         Navigator.popAndPushNamed(context, '/login');
@@ -94,7 +94,7 @@ class ReservationDetailPageState extends State<ReservationDetailPage>
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
-          title: const Text("Reservation Detail",
+          title: const Text("Rental Detail",
               style: TextStyle(
                   fontFamily: 'Opensans', fontWeight: FontWeight.w600))),
       body: SafeArea(child: Stack(children: getItems(context))),
@@ -117,6 +117,7 @@ class ReservationDetailPageState extends State<ReservationDetailPage>
   }
 
   ListView createReservationDetailsView(BuildContext context) {
+    // print(reservation.id);
     return ListView(
       children: <Widget>[
         Padding(
@@ -125,21 +126,21 @@ class ReservationDetailPageState extends State<ReservationDetailPage>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               WidgetGenerator.showDetailMinorAttribute(
-                  context, "Brand", reservation.carBrand),
+                  context, "Brand", rental.carBrand),
               WidgetGenerator.showDetailMinorAttribute(
-                  context, "Make", reservation.carMake),
+                  context, "Make", rental.carMake),
               car != null ? CarPreviewRow(car!, false) : const SizedBox(),
               WidgetGenerator.showDetailMinorAttribute(
-                  context, "Amount", Formatter.formatCurrent(reservation.cost)),
+                  context, "Amount", Formatter.formatCurrent(rental.cost)),
               WidgetGenerator.showDetailMinorAttribute(context, "Rental Start",
-                  DateFormat.yMMMd().format(reservation.reservationStartDate)),
+                  DateFormat.yMMMd().format(rental.reservationStartDate)),
               WidgetGenerator.showDetailMinorAttribute(context, "Rental End",
-                  DateFormat.yMMMd().format(reservation.reservationEndDate)),
+                  DateFormat.yMMMd().format(rental.reservationEndDate)),
               WidgetGenerator.showDetailMinorAttribute(
-                  context, "Rental Status", reservation.status),
-              reservation.isAccepted()
-                  ? WidgetGenerator.showActionPanel(context, "Action", onSecure)
-                  : const SizedBox(width: 0)
+                  context, "Rental Status", rental.status),
+              // reservation.isAccepted()
+              //     ? WidgetGenerator.showActionPanel(context, "Action", onSecure)
+              //     : const SizedBox(width: 0)
             ],
           ),
         ),
@@ -147,12 +148,12 @@ class ReservationDetailPageState extends State<ReservationDetailPage>
     );
   }
 
-  onSecure() {
-    print("clicked");
+  // onSecure() {
+  //   print("clicked");
 
-    var newRental = NewRental(reservation.id);
-    _submitForm(newRental);
-  }
+  //   var newRental = NewRental(reservation.id);
+  //   _submitForm(newRental);
+  // }
 
   void showMessage(String message, bool succesful,
       [MaterialColor color = Colors.red]) {

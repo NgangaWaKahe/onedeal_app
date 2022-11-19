@@ -94,6 +94,24 @@ class WidgetGenerator {
         ));
   }
 
+  static Widget AlignTwoWidget(Widget firstWidget, Widget secondWidget) {
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              firstWidget,
+              const SizedBox(width: 2),
+              secondWidget
+            ]),
+            const Divider(
+              color: Colors.black,
+            ),
+          ],
+        ));
+  }
+
   static Widget showActionPanel(
       BuildContext context, String label, Function() fn,
       [double inputFontSize = 24.0, int maxLines = 1]) {

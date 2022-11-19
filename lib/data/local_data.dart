@@ -27,7 +27,7 @@ class DBHelper {
   void _onCreate(Database db, int version) async {
     // When creating the db, create the table
     await db.execute(
-        "CREATE TABLE Users(id TEXT PRIMARY KEY, first_name TEXT, second_name TEXT, email TEXT, users_type TEXT, token TEXT, org_id INTEGER, is_admin INTEGER, city TEXT, dob TEXT)");
+        "CREATE TABLE Users(id TEXT PRIMARY KEY, first_name TEXT, second_name TEXT, email TEXT, users_type TEXT, token TEXT, is_admin INTEGER, city TEXT, dob TEXT, phonenumber TEXT, create_date TEXT)");
     print("Created tables");
   }
 
@@ -44,10 +44,11 @@ class DBHelper {
       user.email = list[i]["email"];
       user.userType = list[i]["users_type"];
       user.token = list[i]["token"];
-      user.companyID = list[i]["org_id"];
       user.isAdmin = list[i]["is_admin"];
       user.city = list[i]["city"];
       user.dob = list[i]["dob"];
+      user.phonenumber = list[i]["phonenumber"];
+      user.createDate = list[i]["create_date"];
       users.add(user);
     }
     return users;
@@ -60,12 +61,18 @@ class DBHelper {
     });
   }
 
+  Future<void> deleteDatabase() async {
+    io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, "onedeal.db");
+    databaseFactory.deleteDatabase(path);
+  }
+
   Future<void> saveUser(User user) async {
     var dbClient = await db;
     await deleteUser();
     await dbClient!.transaction((txn) async {
       return await txn.rawInsert(
-          'INSERT INTO Users(id, first_name, second_name, email, users_type, token, org_id, is_admin, city, dob ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+          'INSERT INTO Users(id, first_name, second_name, email, users_type, token, is_admin, city, dob, phonenumber, create_date ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
           [
             user.id,
             user.firstName,
@@ -73,10 +80,11 @@ class DBHelper {
             user.email,
             user.userType,
             user.token,
-            user.companyID,
             user.isAdmin,
             user.city,
-            user.dob
+            user.dob,
+            user.phonenumber,
+            user.createDate,
           ]);
     });
   }
