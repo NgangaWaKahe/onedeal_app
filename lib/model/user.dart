@@ -14,6 +14,7 @@ class User {
   String phonenumber = '';
   String createDate = "";
 
+  @override
   String toString() {
     return "id:$id name:$firstName email:$email userType:$userType";
   }

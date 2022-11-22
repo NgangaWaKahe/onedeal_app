@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:onedeal_app/pages/loading_screen.dart';
 import 'package:onedeal_app/pages/uploaddoc/view_document.dart';
 import '../../data/local_data.dart';
 import '../../model/user.dart';
+import '../../services/app.dart';
 import '../../util/widget_generator.dart';
 import '../../widgets/buttons.dart';
 import '../uploaddoc/upload_document.dart';
@@ -79,7 +81,8 @@ class _BasicInformationPageState extends State<BasicInformationPage>
             context, "Names", user!.firstName + " " + user!.secondName),
         WidgetGenerator.showDetailMinorAttribute(context, "Email", user!.email),
         WidgetGenerator.showDetailMinorAttribute(context, "City", user!.city),
-        WidgetGenerator.showDetailMinorAttribute(context, "DOB", user!.dob),
+        WidgetGenerator.showDetailMinorAttribute(
+            context, "DOB", parseDob(user!.dob)),
         WidgetGenerator.showDetailMinorAttribute(
             context, "Phone number", user!.phonenumber),
         WidgetGenerator.AlignTwoWidget(
@@ -127,5 +130,15 @@ class _BasicInformationPageState extends State<BasicInformationPage>
             ),
           ],
         ));
+  }
+
+  String parseDob(String dob) {
+    try {
+      var dt = DateTime.parse(dob);
+      return DateFormat("yyyy-MM-dd").format(dt);
+    } on FormatException catch (e) {
+      print(e);
+      return DateFormat("yyyy-MM-dd").format(DateTime.now());
+    }
   }
 }

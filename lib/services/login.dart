@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:onedeal_app/model/user.dart';
 
 import '../model/error_respond.dart';
@@ -47,7 +48,7 @@ class LoginService {
   Future<User?> register(User user) async {
     try {
       String json = _toJson(user);
-      final uri = new Uri.https(AppService.ServiceUrl, "api/v1/tkn/login");
+      final uri = Uri.https(AppService.ServiceUrl, "api/v1/tkn/login");
       final response =
           await http.post(uri, headers: AppService.Header, body: json);
       print(response.statusCode);
@@ -108,7 +109,7 @@ class LoginService {
         user.isAdmin = 0;
         user.token = x['token'];
         user.city = x['city'];
-        user.dob = x['dob'];
+        user.dob = map['dob'];
         user.userType = x['users_type'];
         user.active = x['active'];
         if (x['is_admin']) {

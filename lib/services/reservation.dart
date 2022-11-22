@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:date_format/date_format.dart';
 import 'package:http/http.dart' as http;
 import 'package:onedeal_app/model/new_reservation.dart';
-import '../model/error_respond.dart';
 import '../model/reservation.dart';
 import '../model/reservation_filter.dart';
 import '../model/results.dart';
@@ -32,8 +30,8 @@ class ReservationService {
 
       final response = await http.get(uri, headers: _headers);
       if (response.statusCode != 200) {
-        return ResponseResult.withRequest(
-            [], response.statusCode, parseErrorRespond(response.body));
+        return ResponseResult.withRequest([], response.statusCode,
+            parseErrorRespond(response.body, response.statusCode));
       }
 
       return ResponseResult<Reservation>(
@@ -84,7 +82,10 @@ class ReservationService {
     return Reservation.createBooking(json.decode(x));
   }
 
-  String parseErrorRespond(dynamic x) {
+  String parseErrorRespond(dynamic x, int statusCode) {
+    if (statusCode == 401) {
+      return "";
+    }
     var map = json.decode(x);
     return map["status"];
   }

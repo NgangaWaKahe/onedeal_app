@@ -241,7 +241,7 @@ class _SignupPageState extends State<SignupPage> {
                                       user.secondName =
                                           _secondnameController.text;
                                       user.city = _cityController.text;
-                                      user.dob = dateCtl.text;
+                                      // user.dob = dateCtl.text;
                                       new LoginService().inviteUser(user).then(
                                           (onValue) => completeLogin(onValue));
                                     },
