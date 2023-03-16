@@ -35,7 +35,6 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   initState() {
     super.initState();
-
     dbHelper.getUsers().then((value) => {
           if (value.isEmpty) {Navigator.popAndPushNamed(context, '/login')}
         });
@@ -90,7 +89,7 @@ class _ProfilePageState extends State<ProfilePage>
           builder: (context) => const BasicInformationPage()));
     } else if (action == actions[6].title) {
       dbHelper.deleteUser().then((onValue) {
-        Navigator.popAndPushNamed(context, '/login');
+        Navigator.popAndPushNamed(context, '/welcome');
       });
     }
   }

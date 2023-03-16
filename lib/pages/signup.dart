@@ -54,7 +54,20 @@ class _SignupPageState extends State<SignupPage> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        body: new SafeArea(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        body: SafeArea(
             top: false,
             bottom: false,
             child: Container(
@@ -66,7 +79,7 @@ class _SignupPageState extends State<SignupPage> {
                     children: <Widget>[
                       Container(
                         height: 250.0,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             image: DecorationImage(
                                 image: AssetImage('assets/images/signup.jpg'),
                                 fit: BoxFit.cover)),
@@ -80,7 +93,7 @@ class _SignupPageState extends State<SignupPage> {
                           left: 30.0,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
+                            children: const [
                               Text(
                                 'Register Now',
                                 style: TextStyle(
@@ -104,13 +117,14 @@ class _SignupPageState extends State<SignupPage> {
                           child: Container(
                             height: screenHeight - 225.0,
                             width: screenWidth,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(40.0),
                                     topRight: Radius.circular(40.0)),
                                 color: Colors.white),
                             child: ListView(
-                              padding: EdgeInsets.only(left: 30.0, right: 30.0),
+                              padding: const EdgeInsets.only(
+                                  left: 30.0, right: 30.0),
                               children: <Widget>[
                                 Row(
                                   mainAxisAlignment:
@@ -135,7 +149,7 @@ class _SignupPageState extends State<SignupPage> {
                                           color: Theme.of(context).primaryColor,
                                           fontSize: 36),
                                       children: <TextSpan>[
-                                        TextSpan(
+                                        const TextSpan(
                                             text:
                                                 'Create Account. Already have an account ',
                                             style: TextStyle(
@@ -144,7 +158,7 @@ class _SignupPageState extends State<SignupPage> {
                                                 fontWeight: FontWeight.w600)),
                                         TextSpan(
                                           text: 'login ',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: 25.0,
                                               color: Colors.blue,
                                               fontWeight: FontWeight.w600),
@@ -159,7 +173,7 @@ class _SignupPageState extends State<SignupPage> {
                                     textScaleFactor: 0.5,
                                   ),
                                 ),
-                                SizedBox(height: 15.0),
+                                const SizedBox(height: 15.0),
                                 TextFormField(
                                   controller: _usernameController,
                                   decoration: createInputDecorator('Email'),
@@ -256,6 +270,31 @@ class _SignupPageState extends State<SignupPage> {
                                         child: Center(
                                           child: Text(
                                             'Register',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'Montserrat'),
+                                          ),
+                                        ),
+                                      ),
+                                    )),
+                                SizedBox(height: 15.0),
+                                GestureDetector(
+                                    onTap: () {
+                                      Navigator.popAndPushNamed(
+                                          context, '/welcome');
+                                    },
+                                    child: Container(
+                                      height: 40.0,
+                                      child: Material(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                        shadowColor: Colors.greenAccent,
+                                        color: Theme.of(context).primaryColor,
+                                        elevation: 7.0,
+                                        child: Center(
+                                          child: Text(
+                                            'Back',
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,

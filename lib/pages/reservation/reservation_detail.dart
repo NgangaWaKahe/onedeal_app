@@ -117,6 +117,7 @@ class ReservationDetailPageState extends State<ReservationDetailPage>
   }
 
   ListView createReservationDetailsView(BuildContext context) {
+    print(reservation.id);
     return ListView(
       children: <Widget>[
         Padding(

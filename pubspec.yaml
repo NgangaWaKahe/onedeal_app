@@ -84,6 +84,7 @@ flutter:
     - assets/images/model.png
     - assets/images/landing-page.jpg
     - assets/images/signup.jpg
+    - assets/images/landing-page-2.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

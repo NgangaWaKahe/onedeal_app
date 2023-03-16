@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:onedeal_app/pages/reservation/reservation.dart';
-import 'package:onedeal_app/pages/rental/rental.dart';
 import 'package:onedeal_app/pages/home/home.dart';
 import 'package:onedeal_app/pages/login.dart';
 import 'package:onedeal_app/pages/profile/profile.dart';
 import 'package:onedeal_app/pages/signup.dart';
+import 'package:onedeal_app/pages/welcome.dart';
 
 Future<void> main() async {
   runApp(const MyApp());
@@ -43,7 +43,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
-        '/': (context) => MainPage(),
+        '/': (context) => const MainPage(),
+        '/welcome': (context) => const Welcome(),
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
       },
@@ -67,7 +68,7 @@ class _MainState extends State<MainPage> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    controller = TabController(initialIndex: 0, length: 4, vsync: this);
+    controller = TabController(initialIndex: 0, length: 3, vsync: this);
     super.initState();
   }
 
@@ -106,7 +107,6 @@ class _MainState extends State<MainPage> with SingleTickerProviderStateMixin {
     return <Widget>[
       const HomePage(),
       const ReservationPage(),
-      const RentalPage(),
       const ProfilePage()
     ];
   }
@@ -115,7 +115,7 @@ class _MainState extends State<MainPage> with SingleTickerProviderStateMixin {
     List<Widget> widget = <Widget>[
       const Tab(icon: Icon(Icons.search, size: 30)),
       const Tab(icon: Icon(Icons.book_sharp, size: 30)),
-      const Tab(icon: Icon(Icons.airport_shuttle, size: 30)),
+      // const Tab(icon: Icon(Icons.airport_shuttle, size: 30)),
       const Tab(icon: Icon(Icons.account_circle_sharp, size: 30)),
     ];
     return widget;
